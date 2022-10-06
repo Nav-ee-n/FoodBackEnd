@@ -4,6 +4,7 @@ const Bodyparser=require("body-parser")
 const Cors=require("cors")
 
 const{signupModel}=require("./signupModel")
+const{RestaddModel}=require("./RestaddModel")
 
 
 
@@ -19,11 +20,26 @@ app.use(Bodyparser.json())
 
 
 
-MOngoose.connect("mongodb+srv://Naveen:boxergiant@cluster0.u3oforn.mongodb.net/?retryWrites=true&w=majority")
+MOngoose.connect("mongodb+srv://Naveen:boxergiant@cluster0.u3oforn.mongodb.net/test?retryWrites=true&w=majority")
 
 app.post("/custcreate",async(req,res)=>{
     const sign=req.body
     const ob=new signupModel(sign)
+    ob.save((error,data)=>{
+        if(error)
+        {
+            res.send("error occured")
+        }
+        else
+        {
+            res.send(data)
+        }
+    })
+})
+
+app.post("/restadd",async(req,res)=>{
+    const restreg=req.body
+    const ob=new RestaddModel(restreg)
     ob.save((error,data)=>{
         if(error)
         {
