@@ -52,6 +52,42 @@ app.post("/restadd",async(req,res)=>{
     })
 })
 
+app.post("/login",async(req,res)=>{
+    const request =req.body
+    signupModel.findOne({ signname:request. signname},(err,sign)=>{
+        if(sign){
+            if(sign.signpassword == request.signpassword){
+                res.send({"success":true,sign:sign});
+            }
+            else{
+                res.send({"success":"Invalid username or password!"});
+            }
+        }
+            else{
+                res.send({"success":"No User Found!"})
+            }
+        
+    })
+})
+
+app.post("/restaurant",async(req,res)=>{
+    const request =req.body
+    RestaddModel.findOne({ rname:request. rname},(err,restreg)=>{
+        if(restreg){
+            if(restreg.rid == request.rid){
+                res.send({"success":true,restreg:restreg});
+            }
+            else{
+                res.send({"success":"Invalid username or password!"});
+            }
+        }
+            else{
+                res.send({"success":"No User Found!"})
+            }
+        
+    })
+})
+
 app.listen(3000,()=>{console.log("Server running at http://localhost:3000")
 
 })
