@@ -6,6 +6,7 @@ const Cors=require("cors")
 const{signupModel}=require("./signupModel")
 const{RestaddModel}=require("./RestaddModel")
 const{ RestableModel}=require("./restable.js")
+const { FoodMenu } = require("./Foodmenu")
 
 
 
@@ -92,9 +93,7 @@ app.post("/restaurant",async(req,res)=>{
 
 
 app.post("/table",async(req,res)=>{
-    console.log("hai")
-    console.log(req.body)
-    console.log("hai")
+    
     const restable=req.body
     restable.book="Available"
     const ob=new RestableModel(restable)
@@ -110,9 +109,9 @@ app.post("/table",async(req,res)=>{
     })
 })
 
-app.get("/viewtable",(req,res)=>{
+app.post("/viewtable",(req,res)=>{
     console.log(req.body)
-    RestableModel.find(
+    RestableModel.find({rname:req.body.rname},
         (error,data)=>{
             if(error){
                 res.send(error)
@@ -130,14 +129,15 @@ app.get("/viewtable",(req,res)=>{
 app.put("/updatetable/:id",function(req,res){
     
     const id = req.params.id,
-    book="Booked"
+    book="Booked",
+    rname=req.body.rname
     
 
     RestableModel.findByIdAndUpdate({"_id":id},
     {$set:{"book":book,
     
 }}).then(function(){
-    RestableModel.find(
+    RestableModel.find({rname:rname},
         (error,data)=>{
             if(error){
                 res.send(error)
@@ -151,7 +151,84 @@ app.put("/updatetable/:id",function(req,res){
             })
         })
 })
+
+
+app.put("/unbooktable/:id",function(req,res){
+    
+    const id = req.params.id,
+    book="Available",
+    rname=req.body.rname
+    
+
+    RestableModel.findByIdAndUpdate({"_id":id},
+    {$set:{"book":book,
+    
+}}).then(function(){
+    RestableModel.find({rname:rname},
+        (error,data)=>{
+            if(error){
+                res.send(error)
+
+                return
+            }
+            else{
+                res.send(data)
+                console.log(data)
+                }
+            })
+        })
+})
+
+
+
+app.post("/addmenu",async(req,res)=>{
+    console.log("hai")
+    console.log(req.body)
+    console.log("hai")
+    const foodmenu=req.body
+    const ob=new FoodMenu(foodmenu)
+    ob.save((error,data)=>{
+        if(error)
+        {
+            res.send("error occured")
+        }
+        else
+        {
+            res.send(data)
+
+        }
+    })
+})
  
+
+app.post("/viewmenu",(req,res)=>{
+    console.log(req.body)
+    FoodMenu.find({rname:req.body.rname},
+        (error,data)=>{
+            if(error){
+                res.send(error)
+                console.log(error)
+            }
+            if(data){
+                res.send(data)
+                console.log(data)
+            }
+        }
+    )
+})
+
+
+app.delete('/deletemenu/:id',function(req,res){
+    const id = req.params.id;
+    FoodMenu.findByIdAndDelete(id,(error,data)=>{
+       if(error){
+        res.send(error)
+        return
+       }else{
+        res.send(data)
+       }
+    })
+})
 
 app.listen(3000,()=>{console.log("Server running at http://localhost:3000")
 

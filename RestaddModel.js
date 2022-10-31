@@ -5,7 +5,7 @@ const RestaddModel=Mongoose.model("Restaurantdetails",Mongoose.Schema({
     runame:String,
     phoneno:String,
     location:String
-
+    
 }))
 
 module.exports={RestaddModel}
