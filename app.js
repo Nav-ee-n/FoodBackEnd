@@ -5,6 +5,7 @@ const Cors=require("cors")
 
 const{signupModel}=require("./signupModel")
 const{RestaddModel}=require("./RestaddModel")
+const{ RestableModel}=require("./restable.js")
 
 
 
@@ -87,6 +88,70 @@ app.post("/restaurant",async(req,res)=>{
         
     })
 })
+
+
+
+app.post("/table",async(req,res)=>{
+    console.log("hai")
+    console.log(req.body)
+    console.log("hai")
+    const restable=req.body
+    restable.book="Available"
+    const ob=new RestableModel(restable)
+    ob.save((error,data)=>{
+        if(error)
+        {
+            res.send("error occured")
+        }
+        else
+        {
+            res.send(data)
+        }
+    })
+})
+
+app.get("/viewtable",(req,res)=>{
+    console.log(req.body)
+    RestableModel.find(
+        (error,data)=>{
+            if(error){
+                res.send(error)
+                console.log(error)
+            }
+            if(data){
+                res.send(data)
+                console.log(data)
+            }
+        }
+    )
+})
+
+
+app.put("/updatetable/:id",function(req,res){
+    
+    const id = req.params.id,
+    book="Booked"
+    
+
+    RestableModel.findByIdAndUpdate({"_id":id},
+    {$set:{"book":book,
+    
+}}).then(function(){
+    RestableModel.find(
+        (error,data)=>{
+            if(error){
+                res.send(error)
+
+                return
+            }
+            else{
+                res.send(data)
+                console.log(data)
+                }
+            })
+        })
+})
+ 
 
 app.listen(3000,()=>{console.log("Server running at http://localhost:3000")
 
