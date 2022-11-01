@@ -7,6 +7,8 @@ const{signupModel}=require("./signupModel")
 const{RestaddModel}=require("./RestaddModel")
 const{ RestableModel}=require("./restable.js")
 const { FoodMenu } = require("./Foodmenu")
+const { OrderMenu } = require("./Ordermenu")
+const { Feedback } = require("./feedback")
 
 
 
@@ -229,6 +231,127 @@ app.delete('/deletemenu/:id',function(req,res){
        }
     })
 })
+
+
+app.post("/order",async(req,res)=>{
+    console.log(req.body)
+    const ordermenu=req.body
+    const ob=new OrderMenu(ordermenu)
+    ob.save((error,data)=>{
+        if(error)
+        {
+            res.send("error occured")
+        }
+        else
+        {
+            res.send(data)
+            
+
+        }
+    })
+})
+
+
+app.post("/vieworder",(req,res)=>{
+    console.log(req.body)
+    OrderMenu.find({rname:req.body.rname},
+        (error,data)=>{
+            if(error){
+                res.send(error)
+                console.log(error)
+            }
+            if(data){
+                res.send(data)
+                console.log(data)
+            }
+        }
+    )
+})
+
+app.delete('/deleteorder/:id',function(req,res){
+    const id = req.params.id;
+    OrderMenu.findByIdAndDelete(id,(error,data)=>{
+       if(error){
+        res.send(error)
+        return
+       }else{
+        res.send(data)
+       }
+    })
+})
+
+
+
+app.post("/addfeedback",async(req,res)=>{
+    console.log(req.body)
+    const feedback=req.body
+    const ob=new Feedback(feedback)
+    ob.save((error,data)=>{
+        if(error)
+        {
+            res.send("error occured")
+        }
+        else
+        {
+            res.send(data)
+            
+
+        }
+    })
+})
+
+
+
+app.post("/viewfeedback",(req,res)=>{
+    console.log(req.body)
+    Feedback.find({rname:req.body.rname},
+        (error,data)=>{
+            if(error){
+                res.send(error)
+                console.log(error)
+            }
+            if(data){
+                res.send(data)
+                console.log(data)
+            }
+        }
+    )
+})
+
+
+
+app.get("/viewrestaurant",(req,res)=>{
+    console.log(req.body)
+    RestaddModel.find(
+        (error,data)=>{
+            if(error){
+                res.send(error)
+                console.log(error)
+            }
+            if(data){
+                res.send(data)
+                console.log(data)
+            }
+        }
+    )
+})
+
+app.get("/adminfeedback",(req,res)=>{
+    console.log(req.body)
+    Feedback.find(
+        (error,data)=>{
+            if(error){
+                res.send(error)
+                console.log(error)
+            }
+            if(data){
+                res.send(data)
+                console.log(data)
+            }
+        }
+    )
+})
+
 
 app.listen(3000,()=>{console.log("Server running at http://localhost:3000")
 
